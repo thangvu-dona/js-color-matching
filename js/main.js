@@ -1,8 +1,11 @@
-import { GAME_STATUS } from './constants'
+import { GAME_STATUS, PAIRS_COUNT } from './constants.js'
+import { getRandomColorPairs } from './utils.js';
 
 // Global variables
 let selections = []
 let gameState = GAME_STATUS.PLAYING
+
+console.log(getRandomColorPairs(PAIRS_COUNT));
 
 // TODOs
 // 1. Generating colors using https://github.com/davidmerfield/randomColor
