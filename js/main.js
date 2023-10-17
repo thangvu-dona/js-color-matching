@@ -1,5 +1,5 @@
 import { GAME_STATUS, GAME_TIME, PAIRS_COUNT } from './constants.js'
-import { getColorElementList, getColorListElement, getInActiveColorList, getPlayAgainButton, getTimerElement } from './selectors.js';
+import { getColorBackground, getColorElementList, getColorListElement, getInActiveColorList, getPlayAgainButton, getTimerElement } from './selectors.js';
 import { createTimer, getRandomColorPairs, hidePlayAgainButton, setTimerText, showPlayAgainButton } from './utils.js';
 
 // Global variables
@@ -79,6 +79,10 @@ function handleColorClick(liElement) {
 
       gameStatus = GAME_STATUS.FINISHED;
     }
+
+    // change background when matching
+    const bgColor = getColorBackground();
+    bgColor.style.backgroundColor = selections[0].dataset.color;
 
     // reset selections
     selections = [];
