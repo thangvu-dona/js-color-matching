@@ -144,6 +144,10 @@ function resetGame() {
   // re-generate colors
   initColors();
 
+  // reset background
+  const bgColor = getColorBackground();
+  bgColor.style.backgroundColor = '';
+  
   // start new game
   startTimer();
 }
