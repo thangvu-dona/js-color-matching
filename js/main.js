@@ -1,10 +1,28 @@
-import { GAME_STATUS, PAIRS_COUNT } from './constants.js'
+import { GAME_STATUS, GAME_TIME, PAIRS_COUNT } from './constants.js'
 import { getColorElementList, getColorListElement, getInActiveColorList, getPlayAgainButton, getTimerElement } from './selectors.js';
-import { getRandomColorPairs, hidePlayAgainButton, setTimerText, showPlayAgainButton } from './utils.js';
+import { createTimer, getRandomColorPairs, hidePlayAgainButton, setTimerText, showPlayAgainButton } from './utils.js';
 
 // Global variables
 let selections = []
 let gameStatus = GAME_STATUS.PLAYING
+let timer = createTimer({
+  seconds: GAME_TIME,
+  onChange: handleTimerChange,
+  onFinish: handleTimerFinish,
+});
+
+function handleTimerChange(second) {
+  // show timer text
+  const fullSecond = `0${second}`.slice(-2);
+  setTimerText(fullSecond);
+}
+
+function handleTimerFinish() {
+  // end game
+  gameStatus = GAME_STATUS.FINISHED;
+  setTimerText('Game Over!')
+  showPlayAgainButton();
+}
 
 // console.log(getRandomColorPairs(PAIRS_COUNT));
 
@@ -56,6 +74,9 @@ function handleColorClick(liElement) {
       // show play again button
       showPlayAgainButton();
 
+      // stop game if you win
+      timer.clear();
+
       gameStatus = GAME_STATUS.FINISHED;
     }
 
@@ -76,7 +97,10 @@ function handleColorClick(liElement) {
     // reset selections
     selections = [];
 
-    gameStatus = GAME_STATUS.PLAYING;
+    // race-condition check with handleFinish
+    if (gameStatus !== GAME_STATUS.FINISHED) {
+      gameStatus = GAME_STATUS.PLAYING;
+    }
   }, 300);
 }
 
@@ -115,6 +139,13 @@ function resetGame() {
 
   // re-generate colors
   initColors();
+
+  // start new game
+  startTimer();
+}
+
+function startTimer() {
+ timer.start();
 }
 
 // main
@@ -124,4 +155,6 @@ function resetGame() {
   attachEventForColorList();
 
   attachEventForPlayAgainButton();
+
+  startTimer();
 })();
